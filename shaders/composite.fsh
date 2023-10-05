@@ -2,16 +2,15 @@
 #include "lib/settings.glsl"
 uniform sampler2D gcolor;
 uniform int isEyeInWater;
+uniform float viewWidth;
+uniform float viewHeight;
+vec2 view = vec2(viewWidth, viewHeight);
 
 varying vec2 texcoord;
 
 void main() {
-	vec3 color = vec3(0);
-	float fontsize = FONT_SIZE;
-	if(texcoord.x < 2 / fontsize && texcoord.y < 1/fontsize) {
-		vec2 lettercoord = texcoord * vec2(fontsize * 0.5, fontsize);
-		color = texture2D(gcolor, lettercoord).rgb;
-	}
+	vec3 color = texture2D(gcolor, (floor(texcoord * view / FONT_SIZE) + 0.5) / view * FONT_SIZE).rgb;
+
 	if (isEyeInWater == 1) {
 		color *= vec3(0.5, 0.7, 1);
 		color += vec3(0.1, 0.14, 0.2);
